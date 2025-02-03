@@ -14,6 +14,10 @@ app.use(cors());
 // db connection
 connectDB();
 
+app.get("/", (req, res) => {
+  res.send("Candidate-profile-builder-backend");
+});
+
 // routes
 app.use("/api/user", userRoutes);
 
