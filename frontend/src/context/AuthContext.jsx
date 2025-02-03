@@ -7,12 +7,22 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      getUserDetails(token)
-        .then((res) => setUser(res.data))
-        .catch(() => logout());
-    }
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await getUserDetails(token);
+        setUser(res.data);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+        logout();
+      }
+    };
+
+    fetchUser();
+
+    return () => setUser(null);
   }, []);
 
   const logout = () => {

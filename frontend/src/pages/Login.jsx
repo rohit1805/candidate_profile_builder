@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { loginUser } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { getUserDetails } from "../api/auth";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -10,18 +11,22 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    if (!credentials.email || !credentials.password) {
-      setError("Please enter both email and password.");
-      return;
-    }
-
     try {
       const res = await loginUser(credentials);
-      localStorage.setItem("token", res.data.token);
-      setUser(res.data.user);
+      const token = res.data.token;
+
+      localStorage.setItem("token", token);
+
+      const userRes = await getUserDetails(token);
+      const fullUserData = userRes.data;
+
+      localStorage.setItem("user", JSON.stringify(fullUserData));
+      setUser(fullUserData);
+
       navigate("/dashboard");
     } catch (error) {
-      setError("Login failed. Please check your credentials.");
+      console.error("Login error:", error);
+      alert("Login failed");
     }
   };
 
@@ -61,14 +66,14 @@ const Login = () => {
 
         <button
           onClick={handleLogin}
-          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+          className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 cursor-pointer"
         >
           Login
         </button>
 
         <div className="text-center mt-4">
           <span className="text-gray-600">Don't have an account? </span>
-          <a href="/" className="text-blue-500 hover:underline">
+          <a href="/" className="text-blue-500 hover:underline cursor-pointer">
             Sign Up
           </a>
         </div>
