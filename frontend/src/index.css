@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* Custom Input Field Styling */
+.input-field {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+    color: #333;
+    background-color: #f9fafb;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: #4c8bf5;
+    outline: none;
+  }
+  
+  
+  
